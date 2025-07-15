@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { FC } from "react";
 import { useUser } from "../context/UserContext"; // ✅ Correct import
-
+import { useNavigate } from "react-router-dom";
 interface SidebarProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -31,6 +31,28 @@ const menuItems = [
 
 const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const { user } = useUser(); // ✅ Access user from context
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    try {
+      const response = await fetch("https://www.test.scorpionlogistics.qa/api/logout.php", {
+        method: "POST",
+        credentials: "include", // for cookie/session-based auth
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+        navigate("/login");
+      } else {
+        console.error("Logout failed:", data.message);
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   return (
     <div
@@ -105,8 +127,8 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
           isOpen ? "px-3 py-4" : "py-4 flex justify-center"
         }`}
       >
-        <NavLink
-          to="/logout"
+        <button
+          onClick={logout}
           className={`group relative flex items-center rounded-lg text-[15px] font-medium transition-all duration-200 ${
             isOpen ? "gap-4 px-4 py-2 w-full" : "justify-center"
           } text-gray-600 hover:text-red-500 hover:bg-red-100`}
@@ -119,7 +141,7 @@ const Sidebar: FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
               Logout
             </span>
           )}
-        </NavLink>
+        </button>
       </div>
     </div>
   );

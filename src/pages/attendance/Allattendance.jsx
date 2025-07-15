@@ -110,7 +110,7 @@ export default function AllAttendance() {
 
   return (
     <div className="p-4 bg-white text-gray-800 text-[12px] space-y-4">
-      <h1 className="text-lg font-bold text-blue-700">Attendance Manager</h1>
+      <h1 className="text-sm font-bold text-blue-700">Attendance Manager</h1>
 
       {/* Form */}
       <div className="bg-blue-50 border border-blue-100 p-3 rounded">
